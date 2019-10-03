@@ -17,6 +17,7 @@ NUM_ENEMIES = 10
 STARTING_LOCATION = (400,100)
 BULLET_DAMAGE = 10
 ENEMY_BULLET_DAMAGE = 10
+BULLET_PROBABILITY = 100
 ENEMY_HP = 100
 HIT_SCORE = 10
 KILL_SCORE = 100
@@ -42,6 +43,7 @@ class Bullet(arcade.Sprite):
         self.center_y += self.dy
 
 
+
     
 class Player(arcade.Sprite):
     def __init__(self):
@@ -56,7 +58,7 @@ class Enemy(arcade.Sprite):
         '''
         super().__init__("assets/penguin.png", 0.5)
         self.hp = ENEMY_HP
-        self.enemy_bullet_list = ENEMY_BULLET_DAMAGE
+        self.enemy_bullet_list = ENEMY_BULLET_DAMAGE 
         (self.center_x, self.center_y) = position
 
 
@@ -75,6 +77,7 @@ class Window(arcade.Window):
         arcade.set_background_color(open_color.blue_4)
         self.bullet_list = arcade.SpriteList()
         self.enemy_list = arcade.SpriteList()
+        self.enemy_bullet_list = arcade.SpriteList()
         self.player = Player()
         self.score = 0
 
@@ -87,17 +90,16 @@ class Window(arcade.Window):
             y = 500
             enemy = Enemy((x,y))
             self.enemy_list.append(enemy)
-            self.enemy_bullet_list.append(enemy)          
+     
 
     def update(self, delta_time):
         self.bullet_list.update()
         self.enemy_bullet_list.update()
-        
         for e in self.enemy_list:
-            if ramdom.randint(0,100) < BULLET_PROBABILITY:
+            if random.randint(0,100) > BULLET_PROBABILITY:
                 x = e.center_x
                 y = e.center_y - 15
-                bullet = Bullet((x,y),(0,-10),BULLET_DAMAGE,False)
+                bullet = Bullet((x,y),(0,-10),BULLET_DAMAGE)
                 self.enemy_bullet_list.append(bullet)
 
             damage = arcade.check_for_collision_with_list(e, self.bullet_list)
@@ -135,7 +137,7 @@ class Window(arcade.Window):
         if button == arcade.MOUSE_BUTTON_LEFT:
             x = self.player.center_x
             y = self.player.center_y + 15
-            bullet = Bullet((x,y),(0,10),BULLET_DAMAGE,True)
+            bullet = Bullet((x,y),(0,10),BULLET_DAMAGE)
             self.bullet_list.append(bullet)
 
 def main():
